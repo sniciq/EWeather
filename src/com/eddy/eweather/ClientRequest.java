@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,14 +20,17 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
 /**
  * http请求工具类
- *
+ * 
  */
 public class ClientRequest {
-	
+
 	/**
 	 * 发起一个异步请求，请求将在新的线程中完成
+	 * 
 	 * @param url
 	 * @throws Exception
 	 */
@@ -38,35 +43,39 @@ public class ClientRequest {
 					e.printStackTrace();
 				}
 			}
-		}).start(); 
+		}).start();
 	}
-	
+
 	/**
 	 * 执行请求
+	 * 
 	 * @param url
 	 * @return
 	 * @throws Exception
 	 */
 	public String request(final String url, boolean isGet) throws Exception {
-		if(isGet) {
+		if (isGet) {
 			return executeGetRequest(url);
-		}
-		else {
+		} else {
 			return requestPost(url, null);
 		}
 	}
-	
+
 	/**
 	 * 执行请求
-	 * @param url 地址
-	 * @param paramMap 参数
+	 * 
+	 * @param url
+	 *            地址
+	 * @param paramMap
+	 *            参数
 	 * @return
 	 * @throws Exception
 	 */
-	public String requestPost(String url, Map<String, String> paramMap) throws Exception {
+	public String requestPost(String url, Map<String, String> paramMap)
+			throws Exception {
 		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-		if(paramMap != null) {
-			for(String s : paramMap.keySet()) {
+		if (paramMap != null) {
+			for (String s : paramMap.keySet()) {
 				qparams.add(new BasicNameValuePair(s, paramMap.get(s)));
 			}
 		}
@@ -76,43 +85,41 @@ public class ClientRequest {
 
 	/**
 	 * 执行http请求
-	 * @param url 请求地址
-	 * @param qparams 参数列表
+	 * 
+	 * @param url
+	 *            请求地址
+	 * @param qparams
+	 *            参数列表
 	 * @return
 	 * @throws Exception
 	 */
-	private String executeRequest(String url, List<NameValuePair> qparams) throws Exception {
+	private String executeRequest(String url, List<NameValuePair> qparams)
+			throws Exception {
 		HttpParams httpParameters = new BasicHttpParams();
 		int timeoutConnection = 1000 * 10;
 		int timeoutSocket = 1000 * 60 * 10;
-		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+		HttpConnectionParams.setConnectionTimeout(httpParameters,
+				timeoutConnection);
 		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-		
+
 		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 		HttpPost post = new HttpPost(url);
-		
+
 		post.setEntity(new UrlEncodedFormEntity(qparams, HTTP.UTF_8));
-		post.addHeader(new BasicHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
+		post.addHeader(new BasicHeader("Accept",
+				"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
 		post.addHeader(new BasicHeader("Accept-Language", "zh-CN,zh;q=0.8"));
-		post.addHeader(new BasicHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36"));
+		post.addHeader(new BasicHeader(
+				"User-Agent",
+				"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36"));
 		HttpResponse response = client.execute(post);
 		return EntityUtils.toString(response.getEntity());
 	}
-	
+
 	private String executeGetRequest(String url) throws Exception {
-		HttpParams httpParameters = new BasicHttpParams();
-		int timeoutConnection = 1000 * 10;
-		int timeoutSocket = 1000 * 60 * 10;
-		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-		
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
-		HttpGet get = new HttpGet(url);
-		
-		get.addHeader(new BasicHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
-		get.addHeader(new BasicHeader("Accept-Language", "zh-CN,zh;q=0.8"));
-		get.addHeader(new BasicHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36"));
-		HttpResponse response = client.execute(get);
-		return EntityUtils.toString(response.getEntity());
+		 HttpClient httpclient = new DefaultHttpClient();
+		 HttpGet request = new HttpGet(url);
+		 String response = httpclient.execute(request, new BasicResponseHandler());
+		 return response;
 	}
 }

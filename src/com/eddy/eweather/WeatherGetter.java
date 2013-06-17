@@ -1,6 +1,7 @@
 package com.eddy.eweather;
 
 
+
 public class WeatherGetter extends Thread {
 	
 	private MainActivity mainActivity;
@@ -18,7 +19,8 @@ public class WeatherGetter extends Thread {
 	@Override
 	public void run() {
 		try {
-			String s = new ClientRequest().request("http://m.weather.com.cn/data/" + cityId + ".html", true);
+//			String s = new ClientRequest().request("http://m.weather.com.cn/data/" + cityId + ".html", true);
+			String s = new ClientRequest().request("http://113.108.239.107/data/" + cityId + ".html", true);
 			mainActivity.getWeatherOver(s);
 		} catch (Exception e) {
 			e.printStackTrace();

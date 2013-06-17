@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 	
-	private static final String city_beijing = "101010100";
+	private static final String city_beijing = "101010100";//北京
 	private static final String city_mdj = "101050301";//牡丹江
 	private static final String city_dl = "101290201";//大理
 	private String nowCityId = "";
@@ -23,6 +23,8 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		weatherHandler = new WeatherHandler(this);
 		nowCityId = city_beijing;
+		
+		loadingDialog = ProgressDialog.show(this, "更新", "请稍等...");
 		new WeatherGetter(this).getWeather(nowCityId);
 	}
 	
@@ -31,7 +33,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
