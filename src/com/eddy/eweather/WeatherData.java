@@ -2,7 +2,6 @@ package com.eddy.eweather;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Locale;
 
 import org.json.JSONObject;
 
