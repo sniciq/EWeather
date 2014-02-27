@@ -1,7 +1,5 @@
 package com.eddy.eweather;
 
-
-
 public class WeatherGetter extends Thread {
 	
 	private MainActivity mainActivity;
@@ -19,13 +17,13 @@ public class WeatherGetter extends Thread {
 	@Override
 	public void run() {
 		try {
-//			String s = new ClientRequest().request("http://m.weather.com.cn/data/" + cityId + ".html", true);
-			String s = new ClientRequest().request("http://113.108.239.107/data/" + cityId + ".html", true);
-			mainActivity.getWeatherOver(s);
+			String[] arr = new String[3];
+			arr[0] = new ClientRequest().request("http://php.weather.sina.com.cn/xml.php?city="+cityId+"&password=DJOYnieT8234jlsK&day=0", true);
+			arr[1] = new ClientRequest().request("http://php.weather.sina.com.cn/xml.php?city="+cityId+"&password=DJOYnieT8234jlsK&day=1", true);
+			arr[2] = new ClientRequest().request("http://php.weather.sina.com.cn/xml.php?city="+cityId+"&password=DJOYnieT8234jlsK&day=2", true);
+			mainActivity.getWeatherOver(arr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		};
-		
 	}
-
 }

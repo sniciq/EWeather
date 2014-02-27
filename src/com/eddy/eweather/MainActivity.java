@@ -9,9 +9,10 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 	
-	private static final String city_beijing = "101010100";//北京
-	private static final String city_mdj = "101050301";//牡丹江
-	private static final String city_dl = "101290201";//大理
+	//城市用GB2312编辑，查询:http://bm.kdd.cc/index.asp
+	private static final String city_beijing = "%B1%B1%BE%A9";//北京
+	private static final String city_mdj = "%C4%B5%B5%A4%BD%AD";//牡丹江
+	private static final String city_dl = "%B4%F3%C0%ED";//大理
 	private String nowCityId = "";
 	
 	private static WeatherHandler weatherHandler = null;
@@ -54,10 +55,10 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void getWeatherOver(String s) {
+	public void getWeatherOver(String[] s) {
 		Message msg = new Message();
 		Bundle data = new Bundle();
-		data.putString("weatherinfo", s);
+		data.putStringArray("weatherinfo", s);
 		msg.setData(data);
 		weatherHandler.sendMessage(msg);
 		loadingDialog.dismiss();

@@ -2,8 +2,7 @@ package com.eddy.eweather;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import org.json.JSONObject;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -21,83 +20,51 @@ public class WeatherHandler extends Handler {
 	
 	public void handleMessage(Message msg) { 
 		try {
-			String s = msg.getData().getString("weatherinfo");
-			JSONObject jsonObj = new JSONObject(s);
-			WeatherData weather = new WeatherData(jsonObj.getJSONObject("weatherinfo"));
+			String[] s = msg.getData().getStringArray("weatherinfo");
+			WeatherData weather = new WeatherData(s[0]);
+			WeatherData weather2 = new WeatherData(s[1]);
+			WeatherData weather3 = new WeatherData(s[2]);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(weather.getSavedate_weather()));
+			String weekDay = dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1];
 			
 			TextView tv = (TextView) activity.findViewById(R.id.text_date);
-			tv.setText(weather.getDate_y() + "  " + weather.getWeek());
+			tv.setText(weather.getSavedate_weather() + " " + weekDay);
 			
 			tv = (TextView) activity.findViewById(R.id.text_city);
 			tv.setText(weather.getCity());
 			
-			String weatherStr = weather.getWeather1() + "  " + weather.getTemp1();
+			String weatherStr = weather.getStatus1() + "  " + weather.getTemperature1() + "℃," + weather.getTemperature2() + "℃";
 			tv = (TextView) activity.findViewById(R.id.text_weather);
 			tv.setText(weatherStr);
-			
+
 			tv = (TextView) activity.findViewById(R.id.text_fl);
-			tv.setText("风力: " + weather.getFl1());
+			tv.setText(weather.getDirection1() + " " + weather.getPower1() + "级, " + "污染:" + weather.getPollution_l());
 			
-			
+			cal.setTime(new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(weather2.getSavedate_weather()));
+			weekDay = dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1];
 			tv = (TextView) activity.findViewById(R.id.text_day2);
-			Calendar cal = Calendar.getInstance();
+			tv.setText(weather2.getSavedate_weather() + " " + weekDay);
 			
-			SimpleDateFormat df = null;
-			if(weather.getDate_y().contains("年")) {
-				df = new SimpleDateFormat("yyyy年MM月dd日");
-			}
-			else {
-				df = new SimpleDateFormat("yyyy-MM-dd");
-			}
-			cal.setTime(df.parse(weather.getDate_y()));
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			tv.setText(dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1]);
+			cal.setTime(new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(weather3.getSavedate_weather()));
+			weekDay = dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1];
 			tv = (TextView) activity.findViewById(R.id.text_day3);
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			tv.setText(dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1]);
-			tv = (TextView) activity.findViewById(R.id.text_day4);
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			tv.setText(dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1]);
-			tv = (TextView) activity.findViewById(R.id.text_day5);
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			tv.setText(dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1]);
-			tv = (TextView) activity.findViewById(R.id.text_day6);
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			tv.setText(dayWeekName[cal.get(Calendar.DAY_OF_WEEK)  - 1]);
+			tv.setText(weather3.getSavedate_weather() + " " + weekDay);
 			
+			weatherStr = weather2.getStatus1() + "  " + weather2.getTemperature1() + "℃," + weather2.getTemperature2() + "℃";
 			tv = (TextView) activity.findViewById(R.id.text_day2_weather);
-			tv.setText(weather.getWeather2());
+			tv.setText(weatherStr);
+			
+			weatherStr = weather3.getStatus1() + "  " + weather3.getTemperature1() + "℃," + weather3.getTemperature2() + "℃";
 			tv = (TextView) activity.findViewById(R.id.text_day3_weather);
-			tv.setText(weather.getWeather3());
-			tv = (TextView) activity.findViewById(R.id.text_day4_weather);
-			tv.setText(weather.getWeather4());
-			tv = (TextView) activity.findViewById(R.id.text_day5_weather);
-			tv.setText(weather.getWeather5());
-			tv = (TextView) activity.findViewById(R.id.text_day6_weather);
-			tv.setText(weather.getWeather6());
+			tv.setText(weatherStr);
 			
 			tv = (TextView) activity.findViewById(R.id.text_day2_fl);
-			tv.setText(weather.getFl2());
+			tv.setText(weather2.getDirection1() + " " + weather2.getPower1() + "级, " + "污染:" + weather2.getPollution_l());
+			
 			tv = (TextView) activity.findViewById(R.id.text_day3_fl);
-			tv.setText(weather.getFl3());
-			tv = (TextView) activity.findViewById(R.id.text_day4_fl);
-			tv.setText(weather.getFl4());
-			tv = (TextView) activity.findViewById(R.id.text_day5_fl);
-			tv.setText(weather.getFl5());
-			tv = (TextView) activity.findViewById(R.id.text_day6_fl);
-			tv.setText(weather.getFl6());
-			
-			tv = (TextView) activity.findViewById(R.id.text_day2_temp);
-			tv.setText(weather.getTemp2());
-			tv = (TextView) activity.findViewById(R.id.text_day3_temp);
-			tv.setText(weather.getTemp3());
-			tv = (TextView) activity.findViewById(R.id.text_day4_temp);
-			tv.setText(weather.getTemp4());
-			tv = (TextView) activity.findViewById(R.id.text_day5_temp);
-			tv.setText(weather.getTemp5());
-			tv = (TextView) activity.findViewById(R.id.text_day6_temp);
-			tv.setText(weather.getTemp6());
-			
+			tv.setText(weather3.getDirection1() + " " + weather3.getPower1() + "级, " + "污染:" + weather3.getPollution_l());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
